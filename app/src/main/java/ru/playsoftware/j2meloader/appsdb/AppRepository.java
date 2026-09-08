@@ -22,7 +22,6 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import org.acra.ACRA;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -167,7 +166,6 @@ public class AppRepository {
 		@Override
 		public void onError(@NotNull Throwable e) {
 			Log.e("AppRepository", e.toString(), e);
-			ACRA.getErrorReporter().handleException(e);
 		}
 	}
 }

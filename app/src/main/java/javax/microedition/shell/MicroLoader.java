@@ -29,9 +29,6 @@ import android.view.KeyEvent;
 
 import androidx.core.content.ContextCompat;
 
-import org.acra.ACRA;
-import org.acra.ErrorReporter;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -146,12 +143,7 @@ public class MicroLoader {
 			}
 		}
 		Map<String, String> attr = descriptor.getAttrs();
-		ErrorReporter errorReporter = ACRA.getErrorReporter();
-		String report = errorReporter.getCustomData(Constants.KEY_APPCENTER_ATTACHMENT);
 		StringBuilder sb = new StringBuilder();
-		if (report != null) {
-			sb.append(report).append("\n");
-		}
 		sb.append(Descriptor.MIDLET_NAME).append(": ").append(descriptor.getName()).append("\n");
 		sb.append(Descriptor.MIDLET_VENDOR).append(": ").append(descriptor.getVendor()).append("\n");
 		sb.append(Descriptor.MIDLET_VERSION).append(": ").append(descriptor.getVersion()).append("\n");
@@ -159,7 +151,6 @@ public class MicroLoader {
 			sb.append(Descriptor.MIDLET_JAR_SIZE).append(": ").append(jarSize).append("\n");
 			sb.append("JAR_HASH_MD5").append(": ").append(jarHash);
 		}
-		errorReporter.putCustomData(Constants.KEY_APPCENTER_ATTACHMENT, sb.toString());
 		MIDlet.initProps(attr);
 		for (int i = 1; ; i++) {
 			String v = attr.get(Descriptor.MIDLET_N + i);

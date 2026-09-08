@@ -9,8 +9,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 
-val secret = Properties().also { properties ->
-    rootProject.file("keystore.properties").runCatching { inputStream().use(properties::load) }
+val secret = Properties().apply {
+    rootProject.file("local.properties").inputStream().use(::load)
 }
 
 android {
@@ -19,14 +19,12 @@ android {
     namespace = "ru.playsoftware.j2meloader"
 
     defaultConfig {
-        applicationId = "ru.woesss.j2meloader"
+        applicationId = "cn.player.optimization.JLMod"
         minSdk = rootProject.extra["minSdk"] as Int
         targetSdk = rootProject.extra["targetSdk"] as Int
         versionCode = 48
         versionName = "0.87.1"
         resValue("string", "app_name", rootProject.name)
-        resValue("string", "app_center", secret.getProperty("appCenterKey", ""))
-        resValue("string", "fingerprint", secret.getProperty("fingerprint", ""))
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -95,7 +93,7 @@ android {
     splits.abi {
         isEnable = true
         reset()
-        include("x86", "armeabi-v7a", "x86_64", "arm64-v8a")
+        include("armeabi-v7a", "arm64-v8a")
         isUniversalApk = true
     }
 
@@ -157,7 +155,6 @@ dependencies {
     implementation(libs.google.material)
     implementation(libs.google.oboe)
 
-    implementation(libs.acra.http)
     implementation(libs.ambilwarna)
     implementation(libs.donations)
     implementation(libs.ffmpeg.mobile)
