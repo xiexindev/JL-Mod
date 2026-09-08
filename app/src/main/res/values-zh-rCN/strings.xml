@@ -109,6 +109,7 @@
     <string name="PREF_IMMEDIATE">实时处理模式</string>
     <string name="pref_input_devices_title">输入设备</string>
     <string name="PREF_KEEP_ASPECT_RATIO">保持长宽比</string>
+    <string name="pref_language">程序语言</string>
     <string name="PREF_LAYOUT">布局</string>
     <string name="PREF_LIMIT_FPS">限制 FPS</string>
     <string name="pref_map_keys">按键映射</string>

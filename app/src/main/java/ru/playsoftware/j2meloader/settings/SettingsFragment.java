@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.os.LocaleListCompat;
@@ -72,36 +73,18 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
 	private void initLanguages() {
 		ListPreference prefLanguage = Objects.requireNonNull(findPreference("pref_language"));
-		StringBuilder sb = new StringBuilder();
-		Context context = EmulatorApplication.getInstance();
-		Resources resources = context.getResources();
-		@SuppressLint("DiscouragedApi")
-		int id = resources.getIdentifier("_generated_res_locale_config", "xml", context.getPackageName());
-		try (XmlResourceParser parser = resources.getXml(id)) {
-			while (XmlUtils.nextElement(parser, "locale")) {
-				sb.append(',').append(parser.getAttributeValue(0));
-			}
-		} catch (Exception e) {
-			Log.e(TAG, "loadLanguagesList: ", e);
-		}
-		String[] languageTags = sb.toString().split(",");
-		LocaleListCompat locales = LocaleListCompat.forLanguageTags(sb.toString());
-		int size = languageTags.length;
-		String[] languageNames = new String[size];
-		languageNames[0] = context.getString(R.string.pref_theme_system);
-		for (int i = 1; i < size; i++) {
-			Locale l = locales.get(i);
-			if (l != null) {
-				languageNames[i] = l.getDisplayName(l);
-			}
-		}
-		prefLanguage.setEntryValues(languageTags);
+		String[] languageTags = new String[]{"","zh-CN","en"};
+		String[] languageNames = new String[]{
+				EmulatorApplication.getInstance().getString(R.string.pref_theme_system),
+				Locale.SIMPLIFIED_CHINESE.getDisplayName(),
+				Locale.ENGLISH.getDisplayName()
+		};
 		prefLanguage.setEntries(languageNames);
+		prefLanguage.setEntryValues(languageTags);
 		Locale locale = AppCompatDelegate.getApplicationLocales().get(0);
-		prefLanguage.setValue(locale != null ? locale.getLanguage() : "");
+		prefLanguage.setValue(locale==null ? "" : locale.getLanguage());
 		prefLanguage.setOnPreferenceChangeListener((preference, value) -> {
-			LocaleListCompat list = LocaleListCompat.forLanguageTags((String) value);
-			AppCompatDelegate.setApplicationLocales(list);
+			AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags((String) value));
 			return true;
 		});
 	}
