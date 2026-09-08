@@ -1,4 +1,8 @@
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 import java.util.Properties
 import java.util.jar.Attributes
@@ -12,6 +16,8 @@ plugins {
 val secret = Properties().apply {
     rootProject.file("local.properties").inputStream().use(::load)
 }
+
+val date : String= SimpleDateFormat("yyMMdd-HHmm").format(Date())
 
 android {
     compileSdk = rootProject.extra["compileSdk"] as Int
@@ -109,8 +115,8 @@ android {
             resValue("string", "app_name", "JL-Debug")
         }
         outputs.configureEach {
-            if (this is com.android.build.gradle.internal.api.BaseVariantOutputImpl) {
-                outputFileName = "${rootProject.name}_$versionName-$dirName.apk"
+            if (this is BaseVariantOutputImpl) {
+                outputFileName = "${rootProject.name}_$versionName-$date-$dirName.apk"
             }
         }
     }

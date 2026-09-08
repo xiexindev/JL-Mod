@@ -27,6 +27,7 @@ import static ru.playsoftware.j2meloader.util.Constants.PREF_DEFAULT_PROFILE;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -63,7 +64,9 @@ import androidx.core.widget.TextViewCompat;
 import androidx.preference.PreferenceManager;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,12 +78,14 @@ import java.util.Set;
 import javax.microedition.shell.MicroActivity;
 import javax.microedition.util.ContextHolder;
 
+import kotlin.io.ByteStreamsKt;
 import kotlin.io.FilesKt;
 import ru.playsoftware.j2meloader.R;
 import ru.playsoftware.j2meloader.config.model.Size;
 import ru.playsoftware.j2meloader.databinding.ActivityConfigBinding;
 import ru.playsoftware.j2meloader.settings.KeyMapperActivity;
 import ru.playsoftware.j2meloader.util.FileUtils;
+import ru.playsoftware.j2meloader.util.IOUtils;
 import ru.playsoftware.j2meloader.util.ViewUtils;
 import ru.woesss.util.TextUtils;
 import yuku.ambilwarna.AmbilWarnaDialog;
@@ -409,6 +414,34 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
 			//noinspection ResultOfMethodCallIgnored
 			dir.mkdirs();
 		}
+
+		File flag = new File(dir,".inner.ok");
+		if (!flag.exists()){
+			//如果标记不存在，就复制一下内置的
+			final String innerShadersPath = "shaders/inner";
+			AssetManager am = this.getAssets();
+			try {
+				String[] innerShadersFiles = am.list(innerShadersPath);
+				if (innerShadersFiles != null){
+					for (String shadersFile : innerShadersFiles) {
+						File file = new File(dir,shadersFile);
+						try (
+								InputStream opened = am.open(innerShadersPath + "/" + shadersFile);
+								FileOutputStream out = new FileOutputStream(file)
+						){
+							IOUtils.copy(opened,out);
+						}
+
+					}
+				}
+                //noinspection ResultOfMethodCallIgnored
+                flag.createNewFile();
+			} catch (IOException e) {
+				Log.e(TAG, "initShaderSpinner: read inner shaders error", e);
+			}
+		}
+
+
 		shaders = new ArrayList<>();
 		ArrayAdapter<ShaderInfo> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, shaders);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
