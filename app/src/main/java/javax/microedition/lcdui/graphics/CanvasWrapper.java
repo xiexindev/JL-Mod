@@ -24,6 +24,7 @@ import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.os.Build;
+import android.text.TextUtils;
 
 import androidx.core.content.res.ResourcesCompat;
 
@@ -36,13 +37,14 @@ public class CanvasWrapper {
 	private final Paint drawPaint = new Paint();
 	private final Paint fillPaint = new Paint();
 	private final Paint textPaint = new Paint();
+	private final Paint subTextPaint;
 	private final Paint imgPaint = new Paint();
 	private final float textSize;
 	private final boolean filterBitmap;
 
 	private float textAscent;
 	private float textCenterOffset;
-	private float textHeight;
+	private float textHeight,subTextHeight;
 	private Canvas canvas;
 
 	public CanvasWrapper(boolean filterBitmap) {
@@ -61,6 +63,10 @@ public class CanvasWrapper {
 		float descent = textPaint.descent();
 		textHeight = descent - textAscent;
 		textCenterOffset = ((descent + textAscent) / 2);
+
+		subTextPaint = new Paint(textPaint);
+		subTextPaint.setTextSize(textSize / 2);
+		subTextHeight = subTextPaint.descent() - subTextPaint.ascent();
 	}
 
 	public void bind(Canvas canvas) {
@@ -89,6 +95,15 @@ public class CanvasWrapper {
 
 	public void drawString(String text, float x, float y) {
 		canvas.drawText(text, x, y - textCenterOffset, textPaint);
+	}
+
+	public void drawString(String text, String subText, float x, float y) {
+		if (TextUtils.isEmpty(subText)) {
+			canvas.drawText(text, x, y - textCenterOffset, textPaint);
+		} else {
+			canvas.drawText(text, x, y - 5, textPaint);
+			canvas.drawText(subText, x, y + subTextHeight + 5, subTextPaint);
+		}
 	}
 
 	public void drawImage(Image image, RectF dst) {

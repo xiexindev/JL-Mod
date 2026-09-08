@@ -193,11 +193,16 @@ public class VirtualKeyboard implements Overlay, Runnable {
 		this.settings = settings;
 		this.saveFile = new File(settings.dir + Config.MIDLET_KEY_LAYOUT_FILE);
 
-		for (int i = KEY_NUM1; i < 9; i++) {
-			keypad[i] = new VirtualKey(Canvas.KEY_NUM1 + i, Integer.toString(1 + i));
-		}
-
 		keypad[KEY_NUM0] = new VirtualKey(Canvas.KEY_NUM0, "0");
+		keypad[KEY_NUM1] = new VirtualKey(Canvas.KEY_NUM1, "1");
+		keypad[KEY_NUM2] = new VirtualKey(Canvas.KEY_NUM2, "2", "ABC");
+		keypad[KEY_NUM3] = new VirtualKey(Canvas.KEY_NUM3, "3", "DEF");
+		keypad[KEY_NUM4] = new VirtualKey(Canvas.KEY_NUM4, "4", "GHI");
+		keypad[KEY_NUM5] = new VirtualKey(Canvas.KEY_NUM5, "5", "JKL");
+		keypad[KEY_NUM6] = new VirtualKey(Canvas.KEY_NUM6, "6", "MNO");
+		keypad[KEY_NUM7] = new VirtualKey(Canvas.KEY_NUM7, "7", "PQRS");
+		keypad[KEY_NUM8] = new VirtualKey(Canvas.KEY_NUM8, "8", "TUV");
+		keypad[KEY_NUM9] = new VirtualKey(Canvas.KEY_NUM9, "9", "WXYZ");
 		keypad[KEY_STAR] = new VirtualKey(Canvas.KEY_STAR, "*");
 		keypad[KEY_POUND] = new VirtualKey(Canvas.KEY_POUND, "#");
 
@@ -1205,7 +1210,7 @@ public class VirtualKeyboard implements Overlay, Runnable {
 	}
 
 	private class VirtualKey implements Runnable {
-		final String label;
+		final String label,subLabel;
 		final int keyCode;
 		final RectF rect = new RectF();
 		final PointF snapOffset = new PointF();
@@ -1219,10 +1224,15 @@ public class VirtualKeyboard implements Overlay, Runnable {
 		private final int hashCode;
 		private int repeatCount;
 
-		VirtualKey(int keyCode, String label) {
+		VirtualKey(int keyCode, String label,String subLabel) {
 			this.keyCode = keyCode;
 			this.label = label;
+			this.subLabel = subLabel;
 			hashCode = 31 * (31 + this.keyCode);
+		}
+
+		VirtualKey(int keyCode, String label) {
+			this(keyCode,label,"");
 		}
 
 		void resize(float width, float height) {
@@ -1263,7 +1273,7 @@ public class VirtualKeyboard implements Overlay, Runnable {
 					g.drawArc(rect, 0, 360);
 				}
 			}
-			g.drawString(label, rect.centerX(), rect.centerY());
+			g.drawString(label, subLabel, rect.centerX(), rect.centerY());
 		}
 
 		@NonNull
