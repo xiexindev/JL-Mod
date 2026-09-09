@@ -18,9 +18,14 @@
 
 package ru.playsoftware.j2meloader.applist;
 
+import android.text.TextUtils;
+
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+
+import org.w3c.dom.Text;
 
 import ru.playsoftware.j2meloader.config.Config;
 
@@ -33,6 +38,8 @@ public class AppItem {
 	private final String author;
 	private final String version;
 	private final String path;
+	@Ignore
+	private boolean isLast = false;
 
 	public AppItem(String path, String title, String author, String version) {
 		this.path = path;
@@ -83,5 +90,14 @@ public class AppItem {
 
 	public String getImagePathExt() {
 		return Config.getAppDir() + path + Config.MIDLET_ICON_FILE;
+	}
+
+	public boolean setLast(String path) {
+		this.isLast = this.getPathExt().equals(path);
+		return this.isLast;
+	}
+
+	public boolean isLast() {
+		return isLast;
 	}
 }

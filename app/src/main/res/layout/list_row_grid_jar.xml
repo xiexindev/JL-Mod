@@ -29,4 +29,17 @@
         android:textStyle="bold"
         tools:text="Example MIDlet Name" />
 
+    <TextView
+        android:id="@+id/list_last"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearance"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:text="(上次运行)"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:ignore="HardcodedText" />
+
 </ru.playsoftware.j2meloader.applist.AppItemLayout>

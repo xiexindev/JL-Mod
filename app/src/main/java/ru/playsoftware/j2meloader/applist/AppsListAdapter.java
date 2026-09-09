@@ -88,18 +88,22 @@ class AppsListAdapter extends ListAdapter<AppItem, AppsListAdapter.AppViewHolder
 		private final ImageView icon;
 		private final TextView name;
 
+		private final TextView last;
+
 		AppViewHolder(ListRowGridJarBinding binding, OnItemClickListener itemClickListener) {
-			this(binding.getRoot(), binding.listTitle, binding.listImage, itemClickListener);
+			this(binding.getRoot(), binding.listTitle, binding.listImage,binding.listLast, itemClickListener);
 		}
 
 		AppViewHolder(View itemView,
 					  TextView listTitle,
 					  ImageView listImage,
+					  TextView lastTitle,
 					  OnItemClickListener itemClickListener) {
 			super(itemView);
+
 			icon = listImage;
 			name = listTitle;
-
+			last = lastTitle;
 			itemView.setOnClickListener(v -> {
 				AppsListAdapter adapter = (AppsListAdapter) getBindingAdapter();
 				if (adapter != null) {
@@ -120,6 +124,7 @@ class AppsListAdapter extends ListAdapter<AppItem, AppsListAdapter.AppViewHolder
 			}
 			name.setText(item.getTitle());
 			itemView.setTag(item);
+			last.setVisibility(item.isLast()? View.VISIBLE:View.GONE);
 		}
 	}
 
@@ -128,7 +133,7 @@ class AppsListAdapter extends ListAdapter<AppItem, AppsListAdapter.AppViewHolder
 		private final TextView version;
 
 		AppListViewHolder(ListRowJarBinding binding, OnItemClickListener itemClickListener) {
-			super(binding.getRoot(), binding.listTitle, binding.listImage, itemClickListener);
+			super(binding.getRoot(), binding.listTitle, binding.listImage, binding.listLast, itemClickListener);
 			author = binding.listAuthor;
 			version = binding.listVersion;
 		}

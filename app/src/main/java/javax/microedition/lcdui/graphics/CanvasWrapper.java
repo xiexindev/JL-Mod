@@ -130,6 +130,7 @@ public class CanvasWrapper {
 
 	public void setTextColor(int color) {
 		textPaint.setColor(color);
+		subTextPaint.setColor(color);
 	}
 
 	public void drawBackgroundedText(String text) {

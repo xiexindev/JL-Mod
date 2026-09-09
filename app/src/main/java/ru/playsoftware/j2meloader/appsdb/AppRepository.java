@@ -17,23 +17,34 @@
 
 package ru.playsoftware.j2meloader.appsdb;
 
+import static ru.playsoftware.j2meloader.util.Constants.PREF_LAST_MIDLET;
+
+import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.core.text.TextUtilsCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.preference.PreferenceManager;
 
 import org.jetbrains.annotations.NotNull;
+import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.flowables.ConnectableFlowable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import ru.playsoftware.j2meloader.EmulatorApplication;
 import ru.playsoftware.j2meloader.applist.AppItem;
 import ru.playsoftware.j2meloader.util.AppUtils;
 
@@ -53,6 +64,10 @@ public class AppRepository {
 				.firstElement()
 				.observeOn(Schedulers.io())
 				.subscribe(this::syncWithFilesystem, errorObserver::onError));
+		compositeDisposable.add(listConnectableFlowable
+				.observeOn(Schedulers.computation())
+				.subscribe(this::sortAppItems,errorObserver::onError)
+		);
 		compositeDisposable.add(listConnectableFlowable.subscribe(appList::postValue, errorObserver::onError));
 		compositeDisposable.add(listConnectableFlowable.connect());
 	}
@@ -123,6 +138,26 @@ public class AppRepository {
 			close();
 		}
 		initDb(file);
+	}
+
+	private void sortAppItems(List<AppItem> list){
+		if (list.size() <= 1) return;
+
+		String lastMidlet = PreferenceManager.getDefaultSharedPreferences(EmulatorApplication.getInstance())
+				.getString(PREF_LAST_MIDLET,"");
+		if (TextUtils.isEmpty(lastMidlet)) return;
+
+
+		int index = -1;
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).setLast(lastMidlet)){
+				index = i;
+				break;
+			}
+		}
+
+		if (index >0 && index<list.size()) list.add(0,list.remove(index));
+
 	}
 
 	private void syncWithFilesystem(List<AppItem> list) {

@@ -184,7 +184,7 @@ public class ProfileModel {
 		version = VERSION;
 		screenWidth = 240;
 		screenHeight = 320;
-		screenBackgroundColor = 0xD0D0D0;
+		screenBackgroundColor = 0x0;
 		screenScaleType = 1;
 		screenGravity = 1;
 		screenScaleRatio = 100;
@@ -201,13 +201,13 @@ public class ProfileModel {
 		touchInput = true;
 
 		vkButtonShape = VirtualKeyboard.SHAPE_ROUND_RECT;
-		vkAlpha = 64;
+		vkAlpha = 180;
 
-		vkBgColor = 0xD0D0D0;
-		vkFgColor = 0x000080;
-		vkBgColorSelected = 0x000080;
-		vkFgColorSelected = 0xFFFFFF;
-		vkOutlineColor = 0xFFFFFF;
+		vkBgColor = screenBackgroundColor;
+		vkFgColor = 0xCCCCCC;
+		vkBgColorSelected = vkFgColor;
+		vkFgColorSelected = vkFgColor;
+		vkOutlineColor = vkFgColor;
 		systemProperties = ContextHolder.getAssetAsString("defaults/system.props");
 	}
 }

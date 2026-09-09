@@ -29,7 +29,7 @@ android {
         minSdk = rootProject.extra["minSdk"] as Int
         targetSdk = rootProject.extra["targetSdk"] as Int
         versionCode = 48
-        versionName = "0.87.1"
+        versionName = "0.87.1-$date"
         resValue("string", "app_name", rootProject.name)
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -116,7 +116,7 @@ android {
         }
         outputs.configureEach {
             if (this is BaseVariantOutputImpl) {
-                outputFileName = "${rootProject.name}_$versionName-$date-$dirName.apk"
+                outputFileName = "${rootProject.name}_$versionName-$dirName.apk"
             }
         }
     }
