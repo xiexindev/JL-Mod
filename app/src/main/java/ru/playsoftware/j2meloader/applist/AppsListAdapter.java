@@ -124,7 +124,7 @@ class AppsListAdapter extends ListAdapter<AppItem, AppsListAdapter.AppViewHolder
 			}
 			name.setText(item.getTitle());
 			itemView.setTag(item);
-			last.setVisibility(item.isLast()? View.VISIBLE:View.GONE);
+			last.setVisibility(View.GONE);
 		}
 	}
 

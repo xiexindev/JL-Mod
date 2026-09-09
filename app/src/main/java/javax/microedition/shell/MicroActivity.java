@@ -225,12 +225,6 @@ public class MicroActivity extends AppCompatActivity {
 
 	private void loadMIDlet() {
 
-		//将最新运行的程序进行记录
-		PreferenceManager.getDefaultSharedPreferences(this)
-				.edit()
-				.putString(PREF_LAST_MIDLET,appPath)
-				.apply();
-
 		Map<String, String> midlets;
 		try {
 			midlets = microLoader.loadMIDletList();
