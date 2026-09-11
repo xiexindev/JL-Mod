@@ -66,6 +66,10 @@ public class AppListModel extends ViewModel implements SharedPreferences.OnShare
 		appRepository.setFilter(filter);
 	}
 
+	void refreshLastMidlet() {
+		appRepository.refreshLastMidlet();
+	}
+
 	public AppItem getApp(int id) {
 		return appRepository.get(id);
 	}

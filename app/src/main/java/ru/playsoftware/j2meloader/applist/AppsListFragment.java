@@ -129,6 +129,8 @@ public class AppsListFragment extends Fragment implements MenuProvider, AppsList
 	private FragmentAppslistBinding binding;
 	private DividerItemDecoration itemDecoration;
 
+	private boolean isItemClick = false;
+
 	public static AppsListFragment newInstance(Uri data) {
 		AppsListFragment fragment = new AppsListFragment();
 		Bundle args = new Bundle();
@@ -182,6 +184,18 @@ public class AppsListFragment extends Fragment implements MenuProvider, AppsList
 		appListViewModel.getAppList().observe(getViewLifecycleOwner(), this::onDbUpdated);
 	}
 
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (isItemClick){
+			// the last launched midlet may have changed while the game was on the foreground
+			appListViewModel.refreshLastMidlet();
+			isItemClick = false;
+		}
+
+	}
+
 	@Override
 	public void onDestroy() {
 		if (searchViewDisposable != null) {
@@ -222,6 +236,7 @@ public class AppsListFragment extends Fragment implements MenuProvider, AppsList
 
 	@Override
 	public void onClick(AppItem item) {
+		isItemClick = true;
 		Config.startApp(requireContext(), item.getTitle(), item.getPathExt());
 	}
 

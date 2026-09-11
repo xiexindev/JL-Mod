@@ -51,7 +51,8 @@ class AppsListAdapter extends ListAdapter<AppItem, AppsListAdapter.AppViewHolder
 			@Override
 			public boolean areContentsTheSame(@NonNull AppItem oldItem, @NonNull AppItem newItem) {
 				return oldItem.getTitle().equals(newItem.getTitle()) &&
-						oldItem.getVersion().equals(newItem.getVersion());
+						oldItem.getVersion().equals(newItem.getVersion()) &&
+						oldItem.isLast() == newItem.isLast();
 			}
 		});
 		this.itemClickListener = onItemClickListener;
@@ -125,6 +126,9 @@ class AppsListAdapter extends ListAdapter<AppItem, AppsListAdapter.AppViewHolder
 			name.setText(item.getTitle());
 			itemView.setTag(item);
 			last.setVisibility(View.GONE);
+			if (item.isLast()){
+				last.setVisibility(View.VISIBLE);
+			}
 		}
 	}
 

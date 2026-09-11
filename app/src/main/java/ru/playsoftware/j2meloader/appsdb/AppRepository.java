@@ -17,6 +17,7 @@
 
 package ru.playsoftware.j2meloader.appsdb;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -24,6 +25,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,8 +36,12 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.flowables.ConnectableFlowable;
 import io.reactivex.schedulers.Schedulers;
+import kotlin.io.FilesKt;
+import kotlin.text.Charsets;
 import ru.playsoftware.j2meloader.applist.AppItem;
+import ru.playsoftware.j2meloader.config.Config;
 import ru.playsoftware.j2meloader.util.AppUtils;
+import ru.playsoftware.j2meloader.util.Constants;
 
 public class AppRepository {
 	private final MutableLiveData<List<AppItem>> appList = new MutableLiveData<>();
@@ -53,8 +59,27 @@ public class AppRepository {
 				.firstElement()
 				.observeOn(Schedulers.io())
 				.subscribe(this::syncWithFilesystem, errorObserver::onError));
-		compositeDisposable.add(listConnectableFlowable.subscribe(appList::postValue, errorObserver::onError));
+		compositeDisposable.add(listConnectableFlowable
+				.subscribe(this::onAppListLoaded, errorObserver::onError));
 		compositeDisposable.add(listConnectableFlowable.connect());
+	}
+
+	/**
+	 * Re-reads the "last launched midlet" file and pushes an updated list.
+	 * Must be called when the screen becomes visible again (e.g. after closing a game).
+	 */
+	public void refreshLastMidlet() {
+		if (db == null) {
+			return;
+		}
+		compositeDisposable.add(db.appItemDao().getAllSingle(query)
+				.subscribeOn(Schedulers.from(db.getQueryExecutor()))
+				.subscribe(this::onAppListLoaded, errorObserver::onError));
+	}
+
+	private void onAppListLoaded(List<AppItem> appItems) {
+		sortLastMidLet(appItems);
+		appList.postValue(appItems);
 	}
 
 	private void execute(Completable completable) {
@@ -95,7 +120,7 @@ public class AppRepository {
 		if (query.setFilter(filter)) {
 			compositeDisposable.add(db.appItemDao().getAllSingle(query)
 					.subscribeOn(Schedulers.from(db.getQueryExecutor()))
-					.subscribe(appList::postValue, errorObserver::onError));
+					.subscribe(this::onAppListLoaded, errorObserver::onError));
 		}
 	}
 
@@ -107,7 +132,7 @@ public class AppRepository {
 		if (query.setSort(sort)) {
 			compositeDisposable.add(db.appItemDao().getAllSingle(query)
 					.subscribeOn(Schedulers.from(db.getQueryExecutor()))
-					.subscribe(appList::postValue, errorObserver::onError));
+					.subscribe(this::onAppListLoaded, errorObserver::onError));
 		}
 	}
 
@@ -123,6 +148,28 @@ public class AppRepository {
 			close();
 		}
 		initDb(file);
+	}
+
+	private void sortLastMidLet(List<AppItem> appItems){
+		if (appItems == null || appItems.size() <= 1) return;
+		String path;
+		try {
+			path = FilesKt.readText(
+					new File(Config.getConfigsDir(), Constants.FILE_LAST_MIDLET), Charsets.UTF_8);
+		} catch (Exception e) {
+			return;
+		}
+		if (TextUtils.isEmpty(path)) return;
+		int index = -1;
+		for (int i = 0; i < appItems.size(); i++) {
+			// isLast must be updated for every item, not only until the first match
+			if (appItems.get(i).setLast(path)) {
+				index = i;
+			}
+		}
+		if (index <= 0) return;
+
+		appItems.add(0, appItems.remove(index));
 	}
 
 	private void syncWithFilesystem(List<AppItem> list) {

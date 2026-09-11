@@ -79,6 +79,8 @@ import javax.microedition.util.ContextHolder;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
+import kotlin.io.FilesKt;
+import kotlin.text.Charsets;
 import ru.playsoftware.j2meloader.BuildConfig;
 import ru.playsoftware.j2meloader.R;
 import ru.playsoftware.j2meloader.config.Config;
@@ -224,6 +226,8 @@ public class MicroActivity extends AppCompatActivity {
 	}
 
 	private void loadMIDlet() {
+
+		FilesKt.writeText(new File(Config.getConfigsDir(), FILE_LAST_MIDLET),appPath, Charsets.UTF_8);
 
 		Map<String, String> midlets;
 		try {
