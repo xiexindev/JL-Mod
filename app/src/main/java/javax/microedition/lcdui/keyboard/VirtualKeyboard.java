@@ -193,7 +193,7 @@ public class VirtualKeyboard implements Overlay, Runnable {
 		this.settings = settings;
 		this.saveFile = new File(settings.dir + Config.MIDLET_KEY_LAYOUT_FILE);
 
-		keypad[KEY_NUM0] = new VirtualKey(Canvas.KEY_NUM0, "0","␣");
+		keypad[KEY_NUM0] = new VirtualKey(Canvas.KEY_NUM0, "0","└─┘");
 		keypad[KEY_NUM1] = new VirtualKey(Canvas.KEY_NUM1, "1","@");
 		keypad[KEY_NUM2] = new VirtualKey(Canvas.KEY_NUM2, "2", "ABC");
 		keypad[KEY_NUM3] = new VirtualKey(Canvas.KEY_NUM3, "3", "DEF");
