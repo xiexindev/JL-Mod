@@ -4,10 +4,10 @@
     <string name="_MINUS_ONE" translatable="false">-1</string>
     <string name="about">About</string>
     <string name="about_4pda" translatable="false">&lt;BR>4PDA: &lt;a href="http://4pda.to/forum/index.php?showtopic=824201">4pda.ru/forum/index.php?showtopic=824201&lt;/a></string>
-    <string name="about_copyright" translatable="false">\n\nCopyright 2020-2026 Yury Kharchenko</string>
+    <string name="about_copyright" translatable="false">\n\n新版本仅在QQ群发布: <a href="https://qm.qq.com/cgi-bin/qm/qr?k=wV2T13WxylqpYX7DhtFPKe2l_nmSFmvz&amp;jump_from=webapi">212523021</a></string>
     <string name="about_crowdin" translatable="false">&lt;BR>Crowdin(translation): &lt;a href="https://crowdin.com/project/j2me-loader">crowdin.com/project/j2me-loader&lt;/a></string>
-    <string name="about_email" translatable="false">\n\nEmail: <a href="mailto:j2me.forever@gmail.com">j2me.forever@gmail.com</a>\n</string>
-    <string name="about_github" translatable="false">\nGithub: <a href="https://github.com/woesss/JL-Mod">woesss/JL-Mod</a>\n</string>
+    <string name="about_email" translatable="false">\n\n特别提醒: 修改版, 软件BUG请勿找原作者! \n</string>
+    <string name="about_github" translatable="false">\n原版地址: <a href="https://github.com/woesss/JL-Mod">woesss/JL-Mod</a>\n</string>
     <string name="about_message">This app allows you to launch J2ME apps and games on Android.\n</string>
     <string name="about_xda" translatable="false">&lt;BR>XDA: &lt;a href="https://forum.xda-developers.com/android/apps-games/app-j2me-loader-t3777889">forum.xda-developers.com/android/apps-games/app-j2me-loader-t3777889&lt;/a></string>
     <string name="action_context_delete">Delete</string>
